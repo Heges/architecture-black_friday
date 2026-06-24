@@ -1,0 +1,94 @@
+<mxfile host="app.diagrams.net" agent="draw.io">
+  <diagram name="Caching" id="task1-caching">
+    <mxGraphModel dx="1542" dy="876" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1200" pageHeight="800" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="title" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;fontSize=24;" value="&lt;b&gt;MongoDB шардирование, репликация и кэш&lt;/b&gt;" vertex="1">
+          <mxGeometry height="40" width="650" x="40" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="cluster" parent="1" style="rounded=1;whiteSpace=wrap;html=1;verticalAlign=top;spacingTop=12;fillColor=none;strokeColor=#6C8EBF;strokeWidth=2;dashed=1;fontSize=16;" value="&lt;b&gt;MongoDB Sharded Cluster&lt;/b&gt;" vertex="1">
+          <mxGeometry height="660" width="660" x="500" y="90" as="geometry" />
+        </mxCell>
+        <mxCell id="rs1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;verticalAlign=top;spacingTop=10;fillColor=none;strokeColor=#6C8EBF;strokeWidth=2;fontSize=15;" value="&lt;b&gt;Replica Set: shard1&lt;/b&gt;" vertex="1">
+          <mxGeometry height="380" width="270" x="540" y="330" as="geometry" />
+        </mxCell>
+        <mxCell id="rs2" parent="1" style="rounded=1;whiteSpace=wrap;html=1;verticalAlign=top;spacingTop=10;fillColor=none;strokeColor=#6C8EBF;strokeWidth=2;fontSize=15;" value="&lt;b&gt;Replica Set: shard2&lt;/b&gt;" vertex="1">
+          <mxGeometry height="380" width="270" x="850" y="330" as="geometry" />
+        </mxCell>
+        <mxCell id="api" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DAE8FC;strokeColor=#6C8EBF;strokeWidth=2;fontSize=16;" value="&lt;b&gt;pymongo-api&lt;/b&gt;" vertex="1">
+          <mxGeometry height="80" width="170" x="40" y="350" as="geometry" />
+        </mxCell>
+        <mxCell id="redis" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DAE8FC;strokeColor=#6C8EBF;strokeWidth=2;fontSize=16;" value="&lt;b&gt;redis&lt;/b&gt;" vertex="1">
+          <mxGeometry height="80" width="170" x="270" y="200" as="geometry" />
+        </mxCell>
+        <mxCell id="mongos" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DAE8FC;strokeColor=#6C8EBF;strokeWidth=2;fontSize=16;" value="&lt;b&gt;mongos&lt;/b&gt;" vertex="1">
+          <mxGeometry height="80" width="170" x="270" y="500" as="geometry" />
+        </mxCell>
+        <mxCell id="config" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DAE8FC;strokeColor=#6C8EBF;strokeWidth=2;fontSize=16;" value="&lt;b&gt;configSrv&lt;/b&gt;" vertex="1">
+          <mxGeometry height="80" width="170" x="745" y="170" as="geometry" />
+        </mxCell>
+        <mxCell id="s11" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DAE8FC;strokeColor=#6C8EBF;strokeWidth=2;fontSize=15;" value="&lt;b&gt;shard1-1&lt;/b&gt;" vertex="1">
+          <mxGeometry height="60" width="170" x="590" y="400" as="geometry" />
+        </mxCell>
+        <mxCell id="s12" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DAE8FC;strokeColor=#6C8EBF;strokeWidth=2;fontSize=15;" value="&lt;b&gt;shard1-2&lt;/b&gt;" vertex="1">
+          <mxGeometry height="60" width="170" x="590" y="510" as="geometry" />
+        </mxCell>
+        <mxCell id="s13" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DAE8FC;strokeColor=#6C8EBF;strokeWidth=2;fontSize=15;" value="&lt;b&gt;shard1-3&lt;/b&gt;" vertex="1">
+          <mxGeometry height="60" width="170" x="590" y="620" as="geometry" />
+        </mxCell>
+        <mxCell id="s21" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DAE8FC;strokeColor=#6C8EBF;strokeWidth=2;fontSize=15;" value="&lt;b&gt;shard2-1&lt;/b&gt;" vertex="1">
+          <mxGeometry height="60" width="170" x="900" y="400" as="geometry" />
+        </mxCell>
+        <mxCell id="s22" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DAE8FC;strokeColor=#6C8EBF;strokeWidth=2;fontSize=15;" value="&lt;b&gt;shard2-2&lt;/b&gt;" vertex="1">
+          <mxGeometry height="60" width="170" x="900" y="510" as="geometry" />
+        </mxCell>
+        <mxCell id="s23" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DAE8FC;strokeColor=#6C8EBF;strokeWidth=2;fontSize=15;" value="&lt;b&gt;shard2-3&lt;/b&gt;" vertex="1">
+          <mxGeometry height="60" width="170" x="900" y="620" as="geometry" />
+        </mxCell>
+        <mxCell id="e1" edge="1" parent="1" source="api" style="edgeStyle=orthogonalEdgeStyle;html=1;startArrow=block;endArrow=block;strokeColor=#6C8EBF;strokeWidth=2;" target="redis">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e2" edge="1" parent="1" source="api" style="edgeStyle=orthogonalEdgeStyle;html=1;startArrow=block;endArrow=block;strokeColor=#6C8EBF;strokeWidth=2;" target="mongos">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e3" edge="1" parent="1" source="mongos" style="edgeStyle=orthogonalEdgeStyle;html=1;startArrow=block;endArrow=block;strokeColor=#6C8EBF;strokeWidth=2;" target="config">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="410" y="300" />
+              <mxPoint x="830" y="300" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e4" edge="1" parent="1" source="mongos" style="edgeStyle=orthogonalEdgeStyle;html=1;startArrow=block;endArrow=block;strokeColor=#6C8EBF;strokeWidth=2;" target="rs1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="430" y="320" />
+              <mxPoint x="675" y="320" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e5" edge="1" parent="1" source="mongos" style="edgeStyle=orthogonalEdgeStyle;html=1;startArrow=block;endArrow=block;strokeColor=#6C8EBF;strokeWidth=2;" target="rs2">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="420" y="310" />
+              <mxPoint x="985" y="310" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e6" edge="1" parent="1" source="s11" style="edgeStyle=orthogonalEdgeStyle;html=1;startArrow=block;endArrow=block;strokeColor=#6C8EBF;strokeWidth=2;" target="s12">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e7" edge="1" parent="1" source="s12" style="edgeStyle=orthogonalEdgeStyle;html=1;startArrow=block;endArrow=block;strokeColor=#6C8EBF;strokeWidth=2;" target="s13">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e8" edge="1" parent="1" source="s21" style="edgeStyle=orthogonalEdgeStyle;html=1;startArrow=block;endArrow=block;strokeColor=#6C8EBF;strokeWidth=2;" target="s22">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e9" edge="1" parent="1" source="s22" style="edgeStyle=orthogonalEdgeStyle;html=1;startArrow=block;endArrow=block;strokeColor=#6C8EBF;strokeWidth=2;" target="s23">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
