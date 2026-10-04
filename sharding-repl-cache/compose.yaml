@@ -1,0 +1,165 @@
+name: sharding-repl-cache
+
+x-shard1-service: &shard1-service
+  image: dh-mirror.gitverse.ru/mongo:latest
+  restart: unless-stopped
+  command:
+    - mongod
+    - --shardsvr
+    - --replSet
+    - shard1
+    - --bind_ip_all
+    - --port
+    - "27018"
+  networks:
+    - mongo_network
+  healthcheck:
+    test: ["CMD", "mongosh", "--port", "27018", "--quiet", "--eval", "quit(db.adminCommand({ ping: 1 }).ok ? 0 : 1)"]
+    interval: 5s
+    timeout: 5s
+    retries: 20
+    start_period: 10s
+
+x-shard2-service: &shard2-service
+  image: dh-mirror.gitverse.ru/mongo:latest
+  restart: unless-stopped
+  command:
+    - mongod
+    - --shardsvr
+    - --replSet
+    - shard2
+    - --bind_ip_all
+    - --port
+    - "27019"
+  networks:
+    - mongo_network
+  healthcheck:
+    test: ["CMD", "mongosh", "--port", "27019", "--quiet", "--eval", "quit(db.adminCommand({ ping: 1 }).ok ? 0 : 1)"]
+    interval: 5s
+    timeout: 5s
+    retries: 20
+    start_period: 10s
+
+services:
+  configSrv:
+    image: dh-mirror.gitverse.ru/mongo:latest
+    restart: unless-stopped
+    command:
+      - mongod
+      - --configsvr
+      - --replSet
+      - config_server
+      - --bind_ip_all
+      - --port
+      - "27017"
+    volumes:
+      - config_data:/data/db
+    networks:
+      - mongo_network
+    healthcheck:
+      test: ["CMD", "mongosh", "--port", "27017", "--quiet", "--eval", "quit(db.adminCommand({ ping: 1 }).ok ? 0 : 1)"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 10s
+
+  shard1-1:
+    <<: *shard1-service
+    volumes:
+      - shard1_1_data:/data/db
+
+  shard1-2:
+    <<: *shard1-service
+    volumes:
+      - shard1_2_data:/data/db
+
+  shard1-3:
+    <<: *shard1-service
+    volumes:
+      - shard1_3_data:/data/db
+
+  shard2-1:
+    <<: *shard2-service
+    volumes:
+      - shard2_1_data:/data/db
+
+  shard2-2:
+    <<: *shard2-service
+    volumes:
+      - shard2_2_data:/data/db
+
+  shard2-3:
+    <<: *shard2-service
+    volumes:
+      - shard2_3_data:/data/db
+
+  mongos:
+    image: dh-mirror.gitverse.ru/mongo:latest
+    restart: unless-stopped
+    command:
+      - mongos
+      - --configdb
+      - config_server/configSrv:27017
+      - --bind_ip_all
+      - --port
+      - "27020"
+    depends_on:
+      - configSrv
+      - shard1-1
+      - shard1-2
+      - shard1-3
+      - shard2-1
+      - shard2-2
+      - shard2-3
+    networks:
+      - mongo_network
+    healthcheck:
+      test: ["CMD", "mongosh", "--port", "27020", "--quiet", "--eval", "quit(db.adminCommand({ ping: 1 }).ok ? 0 : 1)"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+      start_period: 10s
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    networks:
+      - mongo_network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+      start_period: 5s
+
+  pymongo-api:
+    build:
+      context: ./api_app
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    depends_on:
+      mongos:
+        condition: service_started
+      redis:
+        condition: service_healthy
+    ports:
+      - "8080:8080"
+    environment:
+      MONGODB_URL: mongodb://mongos:27020
+      MONGODB_DATABASE_NAME: somedb
+      REDIS_URL: redis://redis:6379
+    networks:
+      - mongo_network
+
+networks:
+  mongo_network:
+    driver: bridge
+
+volumes:
+  config_data:
+  shard1_1_data:
+  shard1_2_data:
+  shard1_3_data:
+  shard2_1_data:
+  shard2_2_data:
+  shard2_3_data:
